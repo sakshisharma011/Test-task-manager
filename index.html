@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Task & Timeline Manager</title>
+  <meta name="description" content="Track multiple tasks with owners, priorities and timelines." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%234f46e5'/><path d='M28 52l14 14 30-32' stroke='white' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">✓</span>
+      <h1>TaskFlow</h1>
+    </div>
+    <nav class="views" role="tablist">
+      <button class="view-btn active" data-view="list">List</button>
+      <button class="view-btn" data-view="board">Board</button>
+      <button class="view-btn" data-view="timeline">Timeline</button>
+    </nav>
+    <div class="actions">
+      <button id="exportBtn" class="btn ghost" title="Download all tasks as JSON">Export</button>
+      <label class="btn ghost" title="Load tasks from a JSON file">
+        Import<input id="importInput" type="file" accept="application/json" hidden />
+      </label>
+      <button id="addBtn" class="btn primary">+ New task</button>
+    </div>
+  </header>
+
+  <section class="stats" id="stats"></section>
+
+  <section class="filters">
+    <input id="search" type="search" placeholder="Search tasks, owners, projects…" />
+    <select id="filterProject"><option value="">All projects</option></select>
+    <select id="filterStatus">
+      <option value="">All statuses</option>
+      <option value="todo">To do</option>
+      <option value="in-progress">In progress</option>
+      <option value="blocked">Blocked</option>
+      <option value="done">Done</option>
+    </select>
+    <select id="filterPriority">
+      <option value="">All priorities</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+    <select id="sortBy">
+      <option value="end">Sort: Due date</option>
+      <option value="start">Sort: Start date</option>
+      <option value="priority">Sort: Priority</option>
+      <option value="title">Sort: Title</option>
+    </select>
+    <span class="zoom" id="zoomControls" hidden>
+      <button class="btn ghost small" data-zoom="day">Days</button>
+      <button class="btn ghost small" data-zoom="week">Weeks</button>
+      <button class="btn ghost small" data-zoom="month">Months</button>
+    </span>
+  </section>
+
+  <main id="view"></main>
+
+  <!-- Add / edit dialog -->
+  <dialog id="taskDialog">
+    <form id="taskForm" method="dialog">
+      <h2 id="dialogTitle">New task</h2>
+      <input type="hidden" name="id" />
+      <label>Title<input name="title" required maxlength="120" /></label>
+      <label>Description<textarea name="description" rows="3"></textarea></label>
+      <div class="grid2">
+        <label>Project<input name="project" list="projectList" placeholder="e.g. Q4 Launch" /></label>
+        <label>Owner<input name="owner" placeholder="Who is responsible?" /></label>
+      </div>
+      <datalist id="projectList"></datalist>
+      <div class="grid2">
+        <label>Start date<input type="date" name="start" required /></label>
+        <label>Due date<input type="date" name="end" required /></label>
+      </div>
+      <div class="grid3">
+        <label>Status
+          <select name="status">
+            <option value="todo">To do</option>
+            <option value="in-progress">In progress</option>
+            <option value="blocked">Blocked</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+        <label>Priority
+          <select name="priority">
+            <option value="high">High</option>
+            <option value="medium" selected>Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+        <label>Progress <output id="progressOut">0%</output>
+          <input type="range" name="progress" min="0" max="100" step="5" value="0" />
+        </label>
+      </div>
+      <p class="form-error" id="formError"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn danger" id="deleteBtn" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
